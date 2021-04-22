@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>JS Drum Kit</title>
   <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
 
@@ -57,10 +59,38 @@
   <audio data-key="75" src="sounds/tom.wav"></audio>
   <audio data-key="76" src="sounds/tink.wav"></audio>
 
-<script>
+  <script>
+    /* 涉及知识回顾：
+    1. 键盘事件
+    2. 自定义属性,属性选择器
+    3. HTML5 audio标签 
+    4. 模板字符串
+    5. transitionend事件监听*/
 
-</script>
+    /* 实现思路
+    1. 键盘按下时，利用ASCII值和key属性的关联，找到对应的元素，修改类名为playing
+    2. 同理找到对应的audio标签，播放
+    3. 监听到元素的过渡事件结束后，移除类名
+    4. 每次播放都改变audio的currentTime属性为0，实现长按可以连续播放*/
+
+    window.addEventListener("keydown", e => {
+      const audio = document.querySelector(`audio[data-key='${e.keyCode}']`);
+      const key = document.querySelector(`.key[data-key='${e.keyCode}']`);
+      if (!audio || !key) return;
+      audio.currentTime = 0;
+      audio.play();
+      key.classList.add('playing');
+    })
+
+    const keys = document.querySelectorAll('.key');
+    keys.forEach(key => {
+      key.addEventListener('transitionend', () => {
+        key.classList.remove('playing');
+      });
+    });
+  </script>
 
 
 </body>
+
 </html>
